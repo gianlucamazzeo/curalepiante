@@ -24,8 +24,8 @@ import { loggerConfig } from './config/logger.config';
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ThrottlerModule.forRoot([
       {
-        ttl: 60, // 60 richieste per IP
-        limit: 60, // 1 minuto
+        ttl: 60000, // 1 minuto
+        limit: 60, // 60 richieste per IP
       },
     ]),
 
