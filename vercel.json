@@ -1,8 +1,5 @@
 {
     "version": 2,
-    "buildCommand": "npm run build",
-    "devCommand": "npm run start:dev",
-    "installCommand": "npm install",
     "builds": [
       {
         "src": "dist/main.js",
@@ -12,21 +9,7 @@
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "dist/main.js",
-        "methods": [
-          "GET",
-          "POST",
-          "PUT",
-          "PATCH",
-          "DELETE",
-          "OPTIONS"
-        ],
-        "headers": {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-          "Cache-Control": "public, max-age=0, must-revalidate"
-        }
+        "dest": "dist/main.js"
       }
     ]
   }
