@@ -21,54 +21,67 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+
+# NestJS Vercel
+
 ## Description
+## Descrizione
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Questa è un'applicazione backend costruita con NestJS e ottimizzata per il deployment su Vercel. Il progetto implementa un'API RESTful con autenticazione JWT, integrazione con MongoDB tramite Mongoose, e varie funzionalità di sicurezza come rate limiting, protezione contro attacchi comuni tramite Helmet, e logging avanzato con Pino.
 
-## Project setup
+L'applicazione è strutturata seguendo i principi di architettura modulare di NestJS, offrendo un codice facilmente manutenibile e scalabile per applicazioni enterprise.
 
-```bash
-$ npm install
-```
+## Caratteristiche
 
-## Compile and run the project
+- Autenticazione completa con Passport e JWT
+- Integrazione con database MongoDB tramite Mongoose
+- Sistema di logging avanzato con Pino
+- Protezione contro attacchi comuni con Helmet
+- Rate limiting e throttling per prevenire abusi
+- Validazione dei dati con class-validator
+- Configurazione ambientale con @nestjs/config
+- Monitoraggio della salute dell'applicazione con Terminus
+- Ottimizzazione delle prestazioni con compression
 
-```bash
-# development
-$ npm run start
+## Requisiti
 
-# watch mode
-$ npm run start:dev
+- Node.js (versione consigliata: >=18.x)
+- MongoDB
 
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Installazione
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Esecuzione
+
+```bash
+# Sviluppo
+npm run start:dev
+
+# Produzione
+npm run build
+npm run start:prod
+```
+
+## Test
+
+```bash
+# Unit test
+npm run test
+
+# Test e2e
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## Deployment su Vercel
+
+Questo progetto è configurato per essere facilmente deployato su Vercel. Assicurarsi di configurare correttamente le variabili d'ambiente necessarie nella dashboard di Vercel.
+
 
 ## Resources
 
