@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "dos2unix-prettier",
+        "type": "shell",
+        "command": "dos2unix \"${file}\" ; prettier --write \"${file}\"",
+        "options": {
+          "shell": {
+            "executable": "cmd.exe",
+            "args": ["/c"]
+          }
+        },
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      }
+    ]
+  }

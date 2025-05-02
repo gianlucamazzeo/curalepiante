@@ -24,7 +24,6 @@
 
 # NestJS Vercel
 
-## Description
 ## Descrizione
 
 Questa è un'applicazione backend costruita con NestJS e ottimizzata per il deployment su Vercel. Il progetto implementa un'API RESTful con autenticazione JWT, integrazione con MongoDB tramite Mongoose, e varie funzionalità di sicurezza come rate limiting, protezione contro attacchi comuni tramite Helmet, e logging avanzato con Pino.

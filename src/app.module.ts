@@ -8,9 +8,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
-
+import { CommonModule } from './common/common.module';
 import databaseConfig from './config/database';
 import { loggerConfig } from './config/logger.config';
+import { UtentiModule } from './utenti/utenti.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,7 +23,6 @@ import { loggerConfig } from './config/logger.config';
     }),
     // Logger
     LoggerModule.forRoot(loggerConfig),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ThrottlerModule.forRoot([
       {
         ttl: 60000, // 1 minuto
@@ -46,6 +47,9 @@ import { loggerConfig } from './config/logger.config';
     }),
 
     // Altri moduli
+    CommonModule,
+    AuthModule,
+    UtentiModule,
     DatabaseModule,
     HealthModule,
   ],
@@ -55,7 +59,6 @@ import { loggerConfig } from './config/logger.config';
     // Applica rate limiting globalmente
     {
       provide: APP_GUARD,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       useClass: ThrottlerGuard,
     },
   ],
