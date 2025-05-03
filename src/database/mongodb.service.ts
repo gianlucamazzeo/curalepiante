@@ -25,6 +25,10 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
       this.logger.log('Connessione a MongoDB stabilita con successo', {
         context: 'MongoDB',
       });
+      this.logger.log(
+        `Database URI: ${process.env.MONGODB_URI?.substring(0, process.env.MONGODB_URI.indexOf('?')) || 'Non definito'}`,
+      );
+      this.logger.log(`Ambiente: ${process.env.NODE_ENV || 'Non definito'}`);
     });
 
     this.connection.on('disconnected', () => {

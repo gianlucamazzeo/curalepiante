@@ -17,7 +17,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "allowJs": true
+    "allowJs": true,
+    "noImplicitThis": true
   },
   "include": ["src/**/*", "dist/**/*"]
 }
