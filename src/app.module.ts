@@ -14,6 +14,7 @@ import { loggerConfig } from './config/logger.config';
 import { UtentiModule } from './utenti/utenti.module';
 import { AuthModule } from './auth/auth.module';
 import { CategorieModule } from './categorie/categorie.module';
+import { ArticoliModule } from './articoli/articoli.module';
 @Module({
   imports: [
     // Configurazione
@@ -53,6 +54,7 @@ import { CategorieModule } from './categorie/categorie.module';
     DatabaseModule,
     HealthModule,
     CategorieModule,
+    ArticoliModule,
   ],
   controllers: [AppController],
   providers: [
