@@ -13,7 +13,7 @@ import databaseConfig from './config/database';
 import { loggerConfig } from './config/logger.config';
 import { UtentiModule } from './utenti/utenti.module';
 import { AuthModule } from './auth/auth.module';
-
+import { CategorieModule } from './categorie/categorie.module';
 @Module({
   imports: [
     // Configurazione
@@ -52,6 +52,7 @@ import { AuthModule } from './auth/auth.module';
     UtentiModule,
     DatabaseModule,
     HealthModule,
+    CategorieModule,
   ],
   controllers: [AppController],
   providers: [
