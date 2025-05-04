@@ -37,10 +37,8 @@ L'applicazione è strutturata seguendo i principi di architettura modulare di Ne
 - Sistema di logging avanzato con Pino
 - Protezione contro attacchi comuni con Helmet
 - Rate limiting e throttling per prevenire abusi
-- Validazione dei dati con class-validator
+- Validazione dati con class-validator
 - Configurazione ambiene con @nestjs/config
-- Monitoraggio della salute dell'applicazione con Terminus
-- Ottimizzazione delle prestazioni con compression
 
 ## Requisiti
 
