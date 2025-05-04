@@ -49,6 +49,14 @@ export class ArticoliController {
     @Query('tags') tags?: string,
     @Query('search') search?: string,
     @Query('ordinamento') ordinamento?: string,
+    // Aggiunti nuovi parametri di query per le nuove proprietà
+    @Query('commestibile') commestibile?: boolean,
+    @Query('infestante') infestante?: boolean,
+    @Query('stagioneFioritura') stagioneFioritura?: string,
+    @Query('tossicaUmani') tossicaUmani?: boolean,
+    @Query('tossicaAnimali') tossicaAnimali?: boolean,
+    @Query('phTerrenoMin') phTerrenoMin?: number,
+    @Query('phTerrenoMax') phTerrenoMax?: number,
   ): Promise<PaginatedResponse<Articolo>> {
     // Controlla se l'utente è admin
     const user = req.user as { ruolo?: string } | undefined;
@@ -72,6 +80,14 @@ export class ArticoliController {
         tags: tagsArray,
         search,
         ordinamento,
+        // Aggiunti nuovi filtri
+        commestibile,
+        infestante,
+        stagioneFioritura,
+        tossicaUmani,
+        tossicaAnimali,
+        phTerrenoMin,
+        phTerrenoMax,
       },
       admin: isAdmin,
     });
@@ -104,11 +120,34 @@ export class ArticoliController {
     };
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
+  // Nuovi endpoint per le specifiche caratteristiche
+  @Get('commestibili')
+  async getArticoliCommestibili(@Query('limit') limit: number = 10) {
     return {
-      message: 'Articolo recuperato con successo',
-      data: await this.articoliService.findById(id),
+      message: 'Articoli di piante commestibili recuperati con successo',
+      data: await this.articoliService.findArticoliCommestibili(limit),
+    };
+  }
+
+  @Get('fioritura/:stagione')
+  async getArticoliPerStagioneFioritura(
+    @Param('stagione') stagione: string,
+    @Query('limit') limit: number = 10,
+  ) {
+    return {
+      message: `Articoli con fioritura in ${stagione} recuperati con successo`,
+      data: await this.articoliService.findArticoliPerStagioneFioritura(
+        stagione,
+        limit,
+      ),
+    };
+  }
+
+  @Get('sicuri-per-animali')
+  async getArticoliSicuriPerAnimali(@Query('limit') limit: number = 10) {
+    return {
+      message: 'Articoli di piante sicure per animali recuperati con successo',
+      data: await this.articoliService.findArticoliSicuriPerAnimali(limit),
     };
   }
 
@@ -123,6 +162,14 @@ export class ArticoliController {
         slug,
         incrementaVisualizzazioni === true,
       ),
+    };
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return {
+      message: 'Articolo recuperato con successo',
+      data: await this.articoliService.findById(id),
     };
   }
 

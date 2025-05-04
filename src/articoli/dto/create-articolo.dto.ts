@@ -36,6 +36,136 @@ class ImmagineDto {
   principale: boolean;
 }
 
+// Nuove classi DTO per le proprietà aggiunte
+class PhTerrenoDto {
+  @IsOptional()
+  @IsNumber()
+  min?: number;
+
+  @IsOptional()
+  @IsNumber()
+  max?: number;
+
+  @IsOptional()
+  @IsNumber()
+  ottimale?: number;
+}
+
+class InfoCuraDto {
+  @IsOptional()
+  @IsString()
+  frequenzaInnaffiatura?: string;
+
+  @IsOptional()
+  @IsString()
+  esposizioneSole?: string;
+
+  @IsOptional()
+  @IsString()
+  tipoTerreno?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PhTerrenoDto)
+  phTerreno?: PhTerrenoDto;
+
+  @IsOptional()
+  @IsString()
+  concimazione?: string;
+
+  @IsOptional()
+  @IsString()
+  potatura?: string;
+
+  @IsOptional()
+  @IsString()
+  cureAggiuntive?: string;
+}
+
+class CondizioniCrescitaDto {
+  @IsOptional()
+  @IsString()
+  rusticita?: string;
+
+  @IsOptional()
+  @IsString()
+  temperaturaIdeale?: string;
+
+  @IsOptional()
+  @IsString()
+  umidita?: string;
+
+  @IsOptional()
+  @IsString()
+  velocitaCrescita?: string;
+
+  @IsOptional()
+  @IsString()
+  livelloDifficolta?: string;
+
+  @IsOptional()
+  @IsString()
+  internoEsterno?: string;
+}
+
+class InfoParassitiMalattieDto {
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  parassitiComuni?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  malattieComuni?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  metodiPrevenzione?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  trattamenti?: string[];
+}
+
+class CaratteristichePiantaDto {
+  @IsOptional()
+  @IsBoolean()
+  commestibile?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  partiCommestibili?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  tossicaUmani?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  tossicaAnimali?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  infestante?: boolean;
+
+  @IsOptional()
+  @IsString()
+  potenzialeInvasivo?: string;
+
+  @IsOptional()
+  @IsString()
+  stagioneFioritura?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  coloriFiori?: string[];
+}
+
 export class CreateArticoloDto {
   @IsNotEmpty({ message: 'Il titolo è obbligatorio' })
   @IsString({ message: 'Il titolo deve essere una stringa' })
@@ -100,4 +230,25 @@ export class CreateArticoloDto {
   @IsOptional()
   @IsBoolean()
   inEvidenza?: boolean;
+
+  // Nuovi campi aggiunti
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InfoCuraDto)
+  infoCura?: InfoCuraDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CondizioniCrescitaDto)
+  condizioniCrescita?: CondizioniCrescitaDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InfoParassitiMalattieDto)
+  infoParassitiMalattie?: InfoParassitiMalattieDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CaratteristichePiantaDto)
+  caratteristichePianta?: CaratteristichePiantaDto;
 }

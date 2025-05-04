@@ -1,6 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Categoria } from '../../categorie/schemas/categoria.schema';
+import {
+  InfoCura,
+  CondizioniCrescita,
+  InfoParassitiMalattie,
+  CaratteristichePianta,
+  PhTerreno,
+} from '../interfaces/articolo-properties.interface';
 
 // Interfaccia per Link Prodotto
 export interface LinkProdotto {
@@ -46,6 +53,54 @@ const MiPiaceAnonimoSchema = new MongooseSchema<MiPiaceAnonimo>({
   fingerprint: { type: String },
   dataCreazione: { type: Date, default: Date.now },
   ultimoAggiornamento: { type: Date },
+});
+
+// Schema per il pH del terreno
+const PhTerrenoSchema = new MongooseSchema<PhTerreno>({
+  min: { type: Number },
+  max: { type: Number },
+  ottimale: { type: Number },
+});
+
+// Schema per InfoCura
+const InfoCuraSchema = new MongooseSchema<InfoCura>({
+  frequenzaInnaffiatura: { type: String },
+  esposizioneSole: { type: String },
+  tipoTerreno: { type: String },
+  phTerreno: { type: PhTerrenoSchema },
+  concimazione: { type: String },
+  potatura: { type: String },
+  cureAggiuntive: { type: String },
+});
+
+// Schema per CondizioniCrescita
+const CondizioniCrescitaSchema = new MongooseSchema<CondizioniCrescita>({
+  rusticita: { type: String },
+  temperaturaIdeale: { type: String },
+  umidita: { type: String },
+  velocitaCrescita: { type: String },
+  livelloDifficolta: { type: String },
+  internoEsterno: { type: String },
+});
+
+// Schema per InfoParassitiMalattie
+const InfoParassitiMalattieSchema = new MongooseSchema<InfoParassitiMalattie>({
+  parassitiComuni: { type: [String], default: [] },
+  malattieComuni: { type: [String], default: [] },
+  metodiPrevenzione: { type: [String], default: [] },
+  trattamenti: { type: [String], default: [] },
+});
+
+// Schema per CaratteristichePianta
+const CaratteristichePiantaSchema = new MongooseSchema<CaratteristichePianta>({
+  commestibile: { type: Boolean, default: false },
+  partiCommestibili: { type: [String], default: [] },
+  tossicaUmani: { type: Boolean, default: false },
+  tossicaAnimali: { type: Boolean, default: false },
+  infestante: { type: Boolean, default: false },
+  potenzialeInvasivo: { type: String },
+  stagioneFioritura: { type: String },
+  coloriFiori: { type: [String], default: [] },
 });
 
 export type ArticoloDocument = Articolo & Document;
@@ -130,6 +185,19 @@ export class Articolo {
 
   @Prop({ type: Object, default: {} })
   metadati?: Record<string, any>;
+
+  // Nuove proprietà aggiunte
+  @Prop({ type: InfoCuraSchema, default: {} })
+  infoCura?: InfoCura;
+
+  @Prop({ type: CondizioniCrescitaSchema, default: {} })
+  condizioniCrescita?: CondizioniCrescita;
+
+  @Prop({ type: InfoParassitiMalattieSchema, default: {} })
+  infoParassitiMalattie?: InfoParassitiMalattie;
+
+  @Prop({ type: CaratteristichePiantaSchema, default: {} })
+  caratteristichePianta?: CaratteristichePianta;
 }
 
 export const ArticoloSchema = SchemaFactory.createForClass(Articolo);
@@ -143,6 +211,9 @@ ArticoloSchema.index({ inEvidenza: 1 });
 ArticoloSchema.index({ dataPubblicazione: -1 });
 ArticoloSchema.index({ conteggioMiPiace: -1 });
 ArticoloSchema.index({ 'miPiaceAnonimi.identificatore': 1 }, { sparse: true });
+ArticoloSchema.index({ 'caratteristichePianta.commestibile': 1 });
+ArticoloSchema.index({ 'caratteristichePianta.infestante': 1 });
+ArticoloSchema.index({ 'caratteristichePianta.stagioneFioritura': 1 });
 
 // Pre-save hook per generare lo slug se non definito
 ArticoloSchema.pre('save', function (this: ArticoloDocument, next) {

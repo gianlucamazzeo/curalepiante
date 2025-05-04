@@ -31,7 +31,11 @@ export class ArticoliService {
     try {
       // Verifica se esiste già un articolo con lo stesso slug (se fornito)
       if (createArticoloDto.slug) {
-        const existingArticolo = await this.findBySlug(createArticoloDto.slug);
+        const existingArticolo = await this.articoloModel
+          .findOne({
+            slug: createArticoloDto.slug,
+          })
+          .exec();
         if (existingArticolo) {
           this.logger.warn(`Slug '${createArticoloDto.slug}' già in uso`);
           throw new ConflictException(
@@ -76,6 +80,14 @@ export class ArticoliService {
       tags?: string[];
       search?: string;
       ordinamento?: string;
+      // Nuovi filtri aggiunti
+      commestibile?: boolean;
+      infestante?: boolean;
+      stagioneFioritura?: string;
+      tossicaUmani?: boolean;
+      tossicaAnimali?: boolean;
+      phTerrenoMin?: number;
+      phTerrenoMax?: number;
     };
     admin?: boolean; // Se true, mostra anche articoli non pubblicati (solo admin)
   }): Promise<PaginatedResponse<Articolo>> {
@@ -138,6 +150,52 @@ export class ArticoliService {
           { descrizione: { $regex: filtri.search, $options: 'i' } },
           { tags: { $regex: filtri.search, $options: 'i' } },
         ];
+      }
+
+      // NUOVI FILTRI AGGIUNTI
+
+      // Filtra per commestibilità
+      if (filtri.commestibile !== undefined) {
+        query['caratteristichePianta.commestibile'] = filtri.commestibile;
+      }
+
+      // Filtra per caratteristica infestante
+      if (filtri.infestante !== undefined) {
+        query['caratteristichePianta.infestante'] = filtri.infestante;
+      }
+
+      // Filtra per stagione di fioritura
+      if (filtri.stagioneFioritura) {
+        query['caratteristichePianta.stagioneFioritura'] = {
+          $regex: filtri.stagioneFioritura,
+          $options: 'i',
+        };
+      }
+
+      // Filtra per tossicità umani
+      if (filtri.tossicaUmani !== undefined) {
+        query['caratteristichePianta.tossicaUmani'] = filtri.tossicaUmani;
+      }
+
+      // Filtra per tossicità animali
+      if (filtri.tossicaAnimali !== undefined) {
+        query['caratteristichePianta.tossicaAnimali'] = filtri.tossicaAnimali;
+      }
+
+      // Filtra per range pH terreno
+      if (
+        filtri.phTerrenoMin !== undefined ||
+        filtri.phTerrenoMax !== undefined
+      ) {
+        query['infoCura.phTerreno'] = {};
+
+        if (filtri.phTerrenoMin !== undefined) {
+          query['infoCura.phTerreno.min'] = { $gte: filtri.phTerrenoMin };
+        }
+
+        if (filtri.phTerrenoMax !== undefined) {
+          query['infoCura.phTerreno.max'] = { $lte: filtri.phTerrenoMax };
+        }
       }
     }
 
@@ -694,6 +752,126 @@ export class ArticoliService {
 
       this.logger.error(
         `Errore durante il recupero degli articoli correlati: ${errorMessage}`,
+        errorStack,
+      );
+
+      throw error;
+    }
+  }
+
+  /**
+   * NUOVI METODI AGGIUNTI
+   */
+
+  /**
+   * Trova articoli commestibili
+   * @param limit Numero massimo di articoli da restituire
+   * @returns Array di articoli commestibili
+   */
+  async findArticoliCommestibili(limit: number = 10): Promise<Articolo[]> {
+    this.logger.debug(`Recupero ${limit} articoli di piante commestibili`);
+
+    try {
+      const articoli = await this.articoloModel
+        .find({
+          pubblicato: true,
+          'caratteristichePianta.commestibile': true,
+        })
+        .limit(limit)
+        .sort({ dataPubblicazione: -1 })
+        .populate('categoriaPrincipale')
+        .lean()
+        .exec();
+
+      return articoli;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Errore sconosciuto';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      this.logger.error(
+        `Errore durante il recupero degli articoli commestibili: ${errorMessage}`,
+        errorStack,
+      );
+
+      throw error;
+    }
+  }
+
+  /**
+   * Trova articoli per stagione di fioritura
+   * @param stagione Stagione di fioritura (es. "primavera", "estate")
+   * @param limit Numero massimo di articoli da restituire
+   * @returns Array di articoli che fioriscono nella stagione specificata
+   */
+  async findArticoliPerStagioneFioritura(
+    stagione: string,
+    limit: number = 10,
+  ): Promise<Articolo[]> {
+    this.logger.debug(
+      `Recupero ${limit} articoli con fioritura in ${stagione}`,
+    );
+
+    try {
+      const articoli = await this.articoloModel
+        .find({
+          pubblicato: true,
+          'caratteristichePianta.stagioneFioritura': {
+            $regex: stagione,
+            $options: 'i',
+          },
+        })
+        .limit(limit)
+        .sort({ dataPubblicazione: -1 })
+        .populate('categoriaPrincipale')
+        .lean()
+        .exec();
+
+      return articoli;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Errore sconosciuto';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      this.logger.error(
+        `Errore durante il recupero degli articoli per stagione di fioritura: ${errorMessage}`,
+        errorStack,
+      );
+
+      throw error;
+    }
+  }
+
+  /**
+   * Trova articoli sicuri per animali domestici (non tossici)
+   * @param limit Numero massimo di articoli da restituire
+   * @returns Array di articoli di piante non tossiche per animali
+   */
+  async findArticoliSicuriPerAnimali(limit: number = 10): Promise<Articolo[]> {
+    this.logger.debug(
+      `Recupero ${limit} articoli di piante sicure per animali`,
+    );
+
+    try {
+      const articoli = await this.articoloModel
+        .find({
+          pubblicato: true,
+          'caratteristichePianta.tossicaAnimali': false,
+        })
+        .limit(limit)
+        .sort({ dataPubblicazione: -1 })
+        .populate('categoriaPrincipale')
+        .lean()
+        .exec();
+
+      return articoli;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Errore sconosciuto';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      this.logger.error(
+        `Errore durante il recupero degli articoli sicuri per animali: ${errorMessage}`,
         errorStack,
       );
 
