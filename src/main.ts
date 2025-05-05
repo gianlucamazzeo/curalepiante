@@ -7,6 +7,18 @@ async function bootstrap() {
   console.log('NODE_ENV:', process.env.NODE_ENV || 'Non definito');
 
   const app = await NestFactory.create(AppModule);
+
+  // Abilita CORS
+  app.enableCors({
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:4173',
+      'https://curalepiante-frontend.vercel.app/',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 
   console.log(
