@@ -24,21 +24,40 @@
 
 # NestJS Vercel
 
+Backend API RESTful sviluppato con NestJS e ottimizzato per il deployment su Vercel.
+
 ## Descrizione
 
 Questa è un'applicazione backend costruita con NestJS e ottimizzata per il deployment su Vercel. Il progetto implementa un'API RESTful con autenticazione JWT, integrazione con MongoDB tramite Mongoose, e varie funzionalità di sicurezza come rate limiting, protezione contro attacchi comuni tramite Helmet, e logging avanzato con Pino.
 
 L'applicazione è strutturata seguendo i principi di architettura modulare di NestJS, offrendo un codice facilmente manutenibile e scalabile per applicazioni enterprise.
 
-## Caratteristiche
+## Caratteristiche principali
 
-- Autenticazione completa con Passport e JWT
-- Integrazione con database MongoDB tramite Mongoose
-- Sistema di logging avanzato con Pino
-- Protezione contro attacchi comuni con Helmet
-- Rate limiting e throttling per prevenire abusi
-- Validazione dati con class-validator
-- Configurazione ambiene con @nestjs/config
+- **Formato di risposta uniforme**: Tutte le API restituiscono lo stesso formato di risposta, facilitando l'utilizzo da parte dei client.
+- **Intercettazione degli errori centralizzata**: Tutti gli errori vengono gestiti uniformemente, con log dettagliati e risposte formattate.
+- **Logging delle performance**: Ogni richiesta API viene loggata con il suo tempo di esecuzione, permettendo di identificare facilmente i problemi di performance.
+- **Supporto per il tracciamento**: Le richieste HTTP includono un ID univoco per facilitare il debug e il tracciamento attraverso l'intera applicazione.
+- **Metadati consistenti**: Ogni risposta include informazioni come timestamp, percorso della richiesta e codice di stato.
+- **Separazione delle responsabilità**: La logica di business nei controller è separata dalla formattazione delle risposte, che avviene automaticamente.
+
+## Moduli implementati
+
+- **Autenticazione**: Sistema completo con JWT, login, e controllo dei ruoli.
+- **Gestione utenti**: CRUD completo per gli utenti con validazione e hashing delle password.
+- **Health check**: Endpoint per monitorare lo stato dell'applicazione e la connessione al database.
+- **Database**: Integrazione con MongoDB tramite Mongoose con gestione ottimizzata delle connessioni.
+
+## Tecnologie utilizzate
+
+- **NestJS**: Framework per la costruzione di applicazioni server-side efficienti e scalabili.
+- **MongoDB**: Database NoSQL per la gestione dei dati.
+- **JWT**: Per l'autenticazione sicura.
+- **Mongoose**: ODM per MongoDB.
+- **Pino**: Logger performante.
+- **Throttler**: Protezione contro attacchi di tipo brute force.
+- **Helmet**: Sicurezza HTTP.
+- **Class-validator**: Validazione dei dati in entrata.
 
 ## Requisiti
 
