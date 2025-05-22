@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { APP_GUARD } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,12 +16,17 @@ import { UtentiModule } from './utenti/utenti.module';
 import { AuthModule } from './auth/auth.module';
 import { CategorieModule } from './categorie/categorie.module';
 import { ArticoliModule } from './articoli/articoli.module';
+import { PianteModule } from './piante/piante.module';
 @Module({
   imports: [
     // Configurazione
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 3600, // Durata cache predefinita: 1 ora
     }),
     // Logger
     LoggerModule.forRoot(loggerConfig),
@@ -55,6 +61,7 @@ import { ArticoliModule } from './articoli/articoli.module';
     HealthModule,
     CategorieModule,
     ArticoliModule,
+    PianteModule,
   ],
   controllers: [AppController],
   providers: [
