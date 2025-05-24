@@ -18,6 +18,13 @@ export interface Pianta {
   watering: string;
   sunlight: string[];
   default_image: PiantaImmagine | null;
+  indoor?: boolean;
+  flowers?: boolean;
+  fruits?: boolean;
+  cuisine?: boolean;
+  medicinal?: boolean;
+  poisonous_to_pets?: boolean;
+  pruning_count?: string;
 }
 
 export interface PianteListaResponse {

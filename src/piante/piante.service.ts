@@ -80,8 +80,45 @@ export class PianteService {
       this.logger.debug(
         `Ricevuti ${response.data.length} risultati da Perenual API`,
       );
-      return response;
-    } catch (error) {
+
+      const enrichedData = await Promise.all(
+        response.data.map(async (pianta) => {
+          try {
+            const detailedPianta = await this.getPiantaById(pianta.id);
+            return {
+              ...pianta,
+              watering: detailedPianta.watering ?? pianta.watering,
+              sunlight: detailedPianta.sunlight ?? pianta.sunlight,
+              indoor: detailedPianta.indoor ?? pianta.indoor,
+              flowers: detailedPianta.flowers ?? pianta.flowers,
+              fruits: detailedPianta.fruits ?? pianta.fruits,
+              cuisine: detailedPianta.cuisine ?? pianta.cuisine,
+              medicinal: detailedPianta.medicinal ?? pianta.medicinal,
+              poisonous_to_pets:
+                detailedPianta.poisonous_to_pets ?? pianta.poisonous_to_pets,
+              pruning_count:
+                detailedPianta.pruning_count ?? pianta.pruning_count,
+            };
+          } catch (error: unknown) {
+            this.logger.warn(
+              `Impossibile recuperare dettagli per pianta ID ${pianta.id}: ${
+                typeof error === 'object' &&
+                error !== null &&
+                'message' in error
+                  ? (error as { message: string }).message
+                  : String(error)
+              }`,
+            );
+            return pianta;
+          }
+        }),
+      );
+
+      return {
+        ...response,
+        data: enrichedData,
+      };
+    } catch (error: unknown) {
       this.logger.error(
         `Errore generale nel servizio piante: ${
           typeof error === 'object' &&
@@ -139,7 +176,7 @@ export class PianteService {
       );
 
       return response;
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(
         `Errore nel recupero della pianta ID ${id}: ${
           typeof error === 'object' &&
