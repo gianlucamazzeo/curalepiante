@@ -24,6 +24,7 @@ export interface Pianta {
   cuisine?: boolean;
   medicinal?: boolean;
   poisonous_to_pets?: boolean;
+  edible?: boolean;
   pruning_count?: string;
 }
 

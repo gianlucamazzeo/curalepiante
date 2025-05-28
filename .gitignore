@@ -54,6 +54,11 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+extract*.json
+piante_*.json
+import-plants.ts
+import_plants.sh
+*.py
 
 .vercel
 
