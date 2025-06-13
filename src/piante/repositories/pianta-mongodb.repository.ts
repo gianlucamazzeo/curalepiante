@@ -164,8 +164,11 @@ export class PiantaMongoRepository implements IPiantaRepository {
         .exec();
       const newId = maxId ? maxId.id + 1 : 1;
 
+      // Sanitizza i dati prima della creazione
+      const sanitizedPianta = this.sanitizeUpdateData(pianta);
+
       const newPianta = new this.piantaModel({
-        ...pianta,
+        ...sanitizedPianta,
         id: newId,
       });
 
@@ -212,8 +215,11 @@ export class PiantaMongoRepository implements IPiantaRepository {
     updates: Partial<PiantaInterface>,
   ): Promise<PiantaInterface> {
     try {
+      // Sanitizza i dati prima dell'aggiornamento
+      const sanitizedUpdates = this.sanitizeUpdateData(updates);
+      
       const updatedPianta = await this.piantaModel
-        .findOneAndUpdate({ id }, updates, { new: true })
+        .findOneAndUpdate({ id }, sanitizedUpdates, { new: true })
         .lean()
         .exec();
 
@@ -290,5 +296,29 @@ export class PiantaMongoRepository implements IPiantaRepository {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  private sanitizeUpdateData(data: Partial<PiantaInterface>): Partial<PiantaInterface> {
+    const sanitized = { ...data };
+
+    // Controlla se xWateringBasedTemperature è una stringa (errore dell'API)
+    if (sanitized.xWateringBasedTemperature && typeof sanitized.xWateringBasedTemperature === 'string') {
+      this.logger.warn(`Rilevato errore API per xWateringBasedTemperature: ${sanitized.xWateringBasedTemperature}`);
+      delete sanitized.xWateringBasedTemperature;
+    }
+
+    // Controlla se xWateringPhLevel è una stringa (errore dell'API)
+    if (sanitized.xWateringPhLevel && typeof sanitized.xWateringPhLevel === 'string') {
+      this.logger.warn(`Rilevato errore API per xWateringPhLevel: ${sanitized.xWateringPhLevel}`);
+      delete sanitized.xWateringPhLevel;
+    }
+
+    // Controlla se xSunlightDuration è una stringa (errore dell'API)
+    if (sanitized.xSunlightDuration && typeof sanitized.xSunlightDuration === 'string') {
+      this.logger.warn(`Rilevato errore API per xSunlightDuration: ${sanitized.xSunlightDuration}`);
+      delete sanitized.xSunlightDuration;
+    }
+
+    return sanitized;
   }
 }

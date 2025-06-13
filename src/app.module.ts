@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategorieModule } from './categorie/categorie.module';
 import { ArticoliModule } from './articoli/articoli.module';
 import { PianteModule } from './piante/piante.module';
+import { AffiliateProductsModule } from './affiliate-products/affiliate-products.module';
 @Module({
   imports: [
     // Configurazione
@@ -62,6 +63,7 @@ import { PianteModule } from './piante/piante.module';
     CategorieModule,
     ArticoliModule,
     PianteModule,
+    AffiliateProductsModule,
   ],
   controllers: [AppController],
   providers: [
