@@ -50,6 +50,10 @@ export class PiantaMongoRepository implements IPiantaRepository {
         filter.watering = { $regex: query.watering, $options: 'i' };
       }
 
+      if (query.edible !== undefined) {
+        filter.edible = query.edible;
+      }
+
       const [data, total] = await Promise.all([
         this.piantaModel.find(filter).skip(skip).limit(limit).lean().exec(),
         this.piantaModel.countDocuments(filter).exec(),

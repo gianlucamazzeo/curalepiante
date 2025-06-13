@@ -38,4 +38,9 @@ export class PianteQueryDto {
   @IsOptional()
   @IsString()
   watering?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === '1')
+  edible?: boolean;
 }

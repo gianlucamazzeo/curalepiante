@@ -51,6 +51,10 @@ export class PiantaApiRepository implements IPiantaRepository {
         params.append('watering', query.watering);
       }
 
+      if (query.edible !== undefined) {
+        params.append('edible', query.edible ? '1' : '0');
+      }
+
       const url = `${this.apiUrl}/species-list?${params.toString()}`;
 
       const response = await firstValueFrom(

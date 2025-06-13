@@ -35,6 +35,22 @@ export class PianteController {
     return this.pianteService.getPiante(query);
   }
 
+  @Get('edible')
+  @CacheTTL(3600)
+  async getPianteCommestibili(
+    @Query() query: Omit<PianteQueryDto, 'edible'>,
+  ): Promise<PianteListaResponse> {
+    return this.pianteService.getPiante({ ...query, edible: true });
+  }
+
+  @Get('outdoor')
+  @CacheTTL(3600)
+  async getPianteDaEsterno(
+    @Query() query: Omit<PianteQueryDto, 'indoor'>,
+  ): Promise<PianteListaResponse> {
+    return this.pianteService.getPiante({ ...query, indoor: false });
+  }
+
   @Get(':id')
   @CacheTTL(3600)
   async getPiantaById(@Param('id') id: string): Promise<Pianta> {

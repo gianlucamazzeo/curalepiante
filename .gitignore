@@ -58,6 +58,8 @@ extract*.json
 piante_*.json
 import-plants.ts
 import_plants.sh
+download_images.py
+update_plant_images.js
 *.py
 
 .vercel
