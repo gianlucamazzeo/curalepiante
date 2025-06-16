@@ -5,8 +5,8 @@ export type AffiliateProductDocument = AffiliateProduct & Document;
 
 @Schema({ timestamps: true })
 export class AffiliateProduct {
-  @Prop({ type: Types.ObjectId, ref: 'Plant', required: true })
-  plant_id: Types.ObjectId;
+  @Prop({ type: Number, required: true })
+  plant_id: number;
 
   @Prop({ required: true, trim: true })
   plant_common_name: string;

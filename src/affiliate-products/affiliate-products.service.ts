@@ -14,7 +14,7 @@ export class AffiliateProductsService {
   async create(createAffiliateProductDto: CreateAffiliateProductDto): Promise<AffiliateProduct> {
     const createdProduct = new this.affiliateProductModel({
       ...createAffiliateProductDto,
-      plant_id: new Types.ObjectId(createAffiliateProductDto.plant_id),
+      plant_id: parseInt(createAffiliateProductDto.plant_id),
     });
     return createdProduct.save();
   }
@@ -26,7 +26,7 @@ export class AffiliateProductsService {
   async findByPlantId(plantId: string): Promise<AffiliateProduct[]> {
     return this.affiliateProductModel
       .find({ 
-        plant_id: new Types.ObjectId(plantId), 
+        plant_id: parseInt(plantId), 
         is_active: true 
       })
       .sort({ priority: -1, featured: -1 })
@@ -44,7 +44,7 @@ export class AffiliateProductsService {
   async update(id: string, updateAffiliateProductDto: UpdateAffiliateProductDto): Promise<AffiliateProduct> {
     const updateData = { ...updateAffiliateProductDto };
     if (updateData.plant_id) {
-      updateData.plant_id = new Types.ObjectId(updateData.plant_id) as any;
+      updateData.plant_id = parseInt(updateData.plant_id) as any;
     }
 
     const updatedProduct = await this.affiliateProductModel

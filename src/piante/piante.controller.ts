@@ -17,7 +17,11 @@ import { PianteService } from './piante.service';
 import { PianteQueryDto } from './dto/piante-query.dto';
 import { CreatePiantaDto } from './dto/create-pianta.dto';
 import { UpdatePiantaDto } from './dto/update-pianta.dto';
-import { PianteListaResponse, Pianta, PerenualApiResponse } from './interfaces/pianta.interface';
+import {
+  PianteListaResponse,
+  Pianta,
+  PerenualApiResponse,
+} from './interfaces/pianta.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -92,17 +96,21 @@ export class PianteController {
 
   @Get('perenual/:id')
   @CacheTTL(7200)
-  async getPlantDetailsFromPerenual(@Param('id') id: string): Promise<PerenualApiResponse> {
+  async getPlantDetailsFromPerenual(
+    @Param('id') id: string,
+  ): Promise<PerenualApiResponse> {
     return this.pianteService.fetchPlantDetailsFromPerenual(Number(id));
   }
 
   @Get('test-mapping/:id')
   async testMapping(@Param('id') id: string) {
-    const perenualData = await this.pianteService.fetchPlantDetailsFromPerenual(Number(id));
-    const mapped = await this.pianteService['mapPerenualToOurSchema'](perenualData);
+    const perenualData = await this.pianteService.fetchPlantDetailsFromPerenual(
+      Number(id),
+    );
+    const mapped = this.pianteService['mapPerenualToOurSchema'](perenualData);
     return {
       original: perenualData,
-      mapped: mapped
+      mapped: mapped,
     };
   }
 
@@ -113,6 +121,9 @@ export class PianteController {
     @Param('id') id: string,
     @Param('perenualId') perenualId: string,
   ): Promise<Pianta> {
-    return this.pianteService.enrichPlantWithPerenualData(Number(id), Number(perenualId));
+    return this.pianteService.enrichPlantWithPerenualData(
+      Number(id),
+      Number(perenualId),
+    );
   }
 }
