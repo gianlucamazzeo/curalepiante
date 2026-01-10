@@ -21,7 +21,7 @@ export class PiantaApiRepository implements IPiantaRepository {
 
     if (!this.apiUrl || !this.apiKey) {
       this.logger.error('API Perenual non configurata correttamente');
-      throw new Error('Configurazione API Perenual mancante');
+      throw new Error('');
     }
   }
 
